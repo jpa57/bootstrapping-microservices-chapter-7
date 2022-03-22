@@ -7,6 +7,12 @@ Run this example using:
 ```bash
 cd example-1/scripts
 terraform apply
+```
+or on AWS:
+
+```bash
+cd example-1/scripts
+terraform apply
 aws eks --region $(terraform output -raw region) update-kubeconfig --name $(terraform output -raw cluster_name) --profile microservices
 ```
 

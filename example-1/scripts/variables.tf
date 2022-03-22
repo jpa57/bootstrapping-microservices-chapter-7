@@ -1,20 +1,20 @@
 # Sets global variables for this Terraform project.
 
-variable "app_name" {
-    default = "supermetaflix"
+variable app_name {
+    default = "flixtube"
+}
+variable location {
+  default = "West US"
 }
 
-variable "region" {
-  default     = "us-west-2"
-  description = "AWS region"
+variable admin_username {
+  default = "linux_admin"
 }
 
-variable "profile" {
-  default = "microservices"
-  description = "AWS profile for use by Terraform "
+variable client_id {
+
 }
 
-provider "aws" {
-  region = var.region
-  profile = var.profile
+variable client_secret {
+
 }
