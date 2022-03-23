@@ -1,7 +1,7 @@
 # Example-2
 
 This example uses Terraform to create a Kubernetes cluster and deploys a database and **RabbitMQ** to it. We've kept the author's Azure solution intact, and added a parallel directory
-'aws' analogous to the Azure 'scripts' directory.   The Terraform files in this example differ from example-1 only with the addition of the rabbitmq.tf file.
+'aws' analogous to the Azure 'scripts' directory.   The Terraform files in this example differ from example-1 only with the addition of the rabbit.tf file.
 
 Run this example on Azure using:
 

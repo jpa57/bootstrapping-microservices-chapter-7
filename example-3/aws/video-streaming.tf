@@ -2,10 +2,11 @@
 
 locals {
     service_name = "video-streaming"
-    login_server = azurerm_container_registry.container_registry.login_server
-    username = azurerm_container_registry.container_registry.admin_username
-    password = azurerm_container_registry.container_registry.admin_password
+    account_id = "497515779910"
+    login_server = "${local.account_id}.dkr.ecr.${var.region}.amazonaws.com"
     image_tag = "${local.login_server}/${local.service_name}:${var.app_version}"
+    username = "puller"
+    password = "stupid"
 }
 
 resource "null_resource" "docker_build" {
@@ -28,7 +29,10 @@ resource "null_resource" "docker_login" {
     }
 
     provisioner "local-exec" {
-        command = "aws ecr get-login-password --region us-west-2 --profile microservices | docker login --username AWS --password-stdin 497515779910.dkr.ecr.us-west-2.amazonaws.com/supermetaflix"
+      # command to authenticate docker to our environment uses get-login-password.
+      # Combined with --profile, we don't have to put any login info on the command
+      # line or in source.  Granted it is in our ~/.aws/credentials file
+      command = "aws ecr get-login-password --region us-west-2 --profile microservices | docker login --username AWS --password-stdin ${local.login_server}/${var.app_name}"
     }
 }
 
