@@ -1,7 +1,10 @@
 # Deploys the Video streaming microservice to the Kubernetes cluster.
 
+variable "secret_arn" {
+}
+
 data "aws_secretsmanager_secret" "secrets" {
-  arn = "arn:aws:secretsmanager:us-west-2:497515779910:secret:microservices-explore-JaaPlN"
+  arn = ${var.secret_arn}
 }
 
 data "aws_secretsmanager_secret_version" "current" {
