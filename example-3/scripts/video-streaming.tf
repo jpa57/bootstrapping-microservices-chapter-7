@@ -28,7 +28,7 @@ resource "null_resource" "docker_login" {
     }
 
     provisioner "local-exec" {
-        command = "aws ecr get-login-password --region us-west-2 --profile microservices | docker login --username AWS --password-stdin 497515779910.dkr.ecr.us-west-2.amazonaws.com/supermetaflix"
+        command = "docker login ${local.login_server} --username ${local.username} --password ${local.password}"
     }
 }
 
