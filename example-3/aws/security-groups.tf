@@ -12,6 +12,14 @@ resource "aws_security_group" "worker_group_mgmt_one" {
       "10.0.0.0/8",
     ]
   }
+
+  ingress {
+  from_port = 80
+  protocol = "tcp"
+  to_port = 80
+  cidr_blocks = ["0.0.0.0/0"]
+}
+
 }
 
 resource "aws_security_group" "worker_group_mgmt_two" {
@@ -27,6 +35,14 @@ resource "aws_security_group" "worker_group_mgmt_two" {
       "192.168.0.0/16",
     ]
   }
+
+  ingress {
+  from_port = 80
+  protocol = "tcp"
+  to_port = 80
+  cidr_blocks = ["0.0.0.0/0"]
+}
+
 }
 
 resource "aws_security_group" "all_worker_mgmt" {
@@ -44,4 +60,12 @@ resource "aws_security_group" "all_worker_mgmt" {
       "192.168.0.0/16",
     ]
   }
+
+  ingress {
+  from_port = 80
+  protocol = "tcp"
+  to_port = 80
+  cidr_blocks = ["0.0.0.0/0"]
+}
+
 }

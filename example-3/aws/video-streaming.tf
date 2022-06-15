@@ -146,6 +146,5 @@ resource "kubernetes_service" "service" {
             target_port = 80
         }
 
-        type             = "LoadBalancer"
     }
 }
