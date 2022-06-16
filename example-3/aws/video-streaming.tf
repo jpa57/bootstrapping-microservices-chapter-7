@@ -17,7 +17,7 @@ locals {
     username =   jsondecode(nonsensitive(data.aws_secretsmanager_secret_version.current.secret_string))["USER_NAME"]
     password =   jsondecode(nonsensitive(data.aws_secretsmanager_secret_version.current.secret_string))["PASSWORD"]
     login_server = "${local.account_id}.dkr.ecr.${var.region}.amazonaws.com"
-    image_tag = "${local.login_server}/${var.app_name}:${var.app_version}"
+    image_tag = "${local.login_server}/${local.service_name}:${var.app_version}"
 }
 
 resource "null_resource" "docker_build" {
@@ -145,6 +145,6 @@ resource "kubernetes_service" "service" {
             port        = 80
             target_port = 80
         }
-
+        type             = "LoadBalancer"
     }
 }
