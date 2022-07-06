@@ -18,3 +18,14 @@ provider "aws" {
   region = var.region
   profile = var.profile
 }
+
+variable "secret_arn" {
+}
+
+data "aws_secretsmanager_secret" "secrets" {
+  arn = var.secret_arn
+}
+
+data "aws_secretsmanager_secret_version" "current" {
+  secret_id = data.aws_secretsmanager_secret.secrets.id
+}

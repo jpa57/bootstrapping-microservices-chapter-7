@@ -17,7 +17,7 @@ locals {
     username =   jsondecode(nonsensitive(data.aws_secretsmanager_secret_version.current.secret_string))["USER_NAME"]
     password =   jsondecode(nonsensitive(data.aws_secretsmanager_secret_version.current.secret_string))["PASSWORD"]
     login_server = "${local.account_id}.dkr.ecr.${var.region}.amazonaws.com"
-    image_tag = "${local.login_server}/${local.service_name}:${var.app_version}"
+    image_tag = "${local.login_server}/${var.app_name}:${var.app_version}"
 }
 
 resource "null_resource" "docker_build" {
@@ -27,7 +27,7 @@ resource "null_resource" "docker_build" {
     }
 
     provisioner "local-exec" {
-        command = "docker build -t ${local.image_tag} --file ../${local.service_name}/Dockerfile-prod ../${local.service_name}"
+        command = "docker build -t ${local.image_tag} --file ../${var.app_name}/Dockerfile-prod ../${var.app_name}"
     }
 }
 
@@ -43,7 +43,7 @@ resource "null_resource" "docker_login" {
       # command to authenticate docker to our environment uses get-login-password.
       # Combined with --profile, we don't have to put any login info on the command
       # line or in source.  Granted it is in our ~/.aws/credentials file
-      command = "aws ecr get-login-password --region ${var.region} --profile microservices | docker login --username AWS --password-stdin ${local.login_server}/${var.app_name}"
+      command = "aws ecr get-login-password --region ${var.region} --profile microservices | docker login --username AWS --password-stdin ${local.login_server}"
     }
 }
 
@@ -135,11 +135,6 @@ resource "kubernetes_service" "service" {
     }
 
     spec {
-        selector = {
-            pod = kubernetes_deployment.service_deployment.metadata[0].labels.pod
-        }
-
-        session_affinity = "ClientIP"
 
         port {
             port        = 80
@@ -147,4 +142,26 @@ resource "kubernetes_service" "service" {
         }
         type             = "LoadBalancer"
     }
+}
+
+# Create a local variable for the load balancer name.
+locals {
+  lb_name = split("-", split(".", kubernetes_service.service.status.0.load_balancer.0.ingress.0.hostname).0).0
+}
+
+# Read information about the load balancer using the AWS provider.
+data "aws_elb" "video-streaming" {
+  name = local.lb_name
+}
+
+output "load_balancer_name" {
+  value = local.lb_name
+}
+
+output "load_balancer_hostname" {
+  value = kubernetes_service.service.status.0.load_balancer.0.ingress.0.hostname
+}
+
+output "load_balancer_info" {
+  value = data.aws_elb.video-streaming
 }

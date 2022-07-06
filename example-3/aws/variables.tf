@@ -1,7 +1,7 @@
 # Sets global variables for this Terraform project.
 
 variable "app_name" {
-    default = "supermetaflix"
+    default = "video-streaming"
 }
 
 variable app_version { # Can't be called version! That's a reserved word.
