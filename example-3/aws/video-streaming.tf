@@ -135,7 +135,9 @@ resource "kubernetes_service" "service" {
     }
 
     spec {
-
+        selector = {
+            pod = kubernetes_deployment.service_deployment.metadata[0].labels.pod
+        }
         port {
             port        = 80
             target_port = 80
